@@ -12,9 +12,9 @@ env:
     secure: UVuNPF1IgUihTLcLQDIyawnKWyWg8lNwaaceDJGy3kCtx2X1qMPy+M3Zqs4c9Id9V0vXx1wAsDxPDo6saNYVHDMQvb3yS8OIXl22ckyIWbz8BNytBdh4RrvIe0p2RVcLnBJjE5jlCPQeFf/ewkhTNvUBsNZ333MUYZWqI/fntUM=
 
 install:
- - export GOBIN=$HOME/bin PATH=$HOM/bin:$PATH
+ - export GOBIN=$HOME/bin PATH=$HOME/bin:$PATH
  - go get code.google.com/p/go.tools/cmd/vet code.google.com/p/go.tools/cmd/cover github.com/mattn/goveralls github.com/modocache/gover
- - go get -t -v -u ./...
+ - go get -t -v ./...
  - go install -a -race std
 
 script:
