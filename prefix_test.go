@@ -42,6 +42,11 @@ func TestPrefixedWriter(t *testing.T) {
 			"9 123 012 30: asd qwe qwe 123 \r\n9 123 012 30:  werwer fq34234 " +
 				"234 \n9 123 012 30:  dfg dfg dfg dfg",
 		},
+		{
+			"%s \\n %f %s %s %s %s %s",
+			func() string { return "" },
+			"%s \\n %f %s %s %s %s %s",
+		},
 	}
 	for i, cas := range cases {
 		var buf bytes.Buffer

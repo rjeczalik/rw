@@ -34,7 +34,7 @@ func (pw *PrefixedWriter) Write(p []byte) (int, error) {
 		k int // relative offset of a next begining of a line
 		n int // width of the newline characters (1 for LF, 2 for CRLF)
 	)
-	if j, n = indexnl(p); i != -1 {
+	if j, n = indexnl(p); j != -1 {
 		var (
 			err error
 			buf bytes.Buffer
