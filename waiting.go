@@ -3,6 +3,7 @@ package rw
 import (
 	"fmt"
 	"io"
+	"runtime"
 	"sync/atomic"
 	"time"
 )
@@ -51,6 +52,7 @@ func (ww *WaitingWriter) Wait(d time.Duration) error {
 			if atomic.CompareAndSwapUint32(&ww.spin, 1, 0) {
 				return nil
 			}
+			runtime.Gosched()
 		}
 	}
 }
