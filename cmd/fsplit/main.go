@@ -25,7 +25,7 @@ func main() {
 		die(usage)
 	}
 
-	if err := fsplit(flag.Arg(0), *limit); err != nil {
+	if err := fsplit(flag.Arg(0), *limit*rw.MB); err != nil {
 		die(err)
 	}
 }

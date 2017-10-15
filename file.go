@@ -115,6 +115,7 @@ func (f *limitedFile) Write(p []byte) (int, error) {
 		if f.w, err = f.mktmp(); err != nil {
 			return n, err
 		}
+		f.written = 0
 	}
 	return 0, nil
 }
