@@ -133,7 +133,7 @@ func (f *limitedFile) Close() error {
 		return err
 	}
 	if len(f.cow) == 1 {
-		err = nonil(err, os.Rename(f.cow[1], f.path))
+		err = nonil(err, os.Rename(f.cow[0], f.path))
 	} else {
 		for i, tmp := range f.cow {
 			path := fmt.Sprintf("%s.%d", f.path, i+1)
