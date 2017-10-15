@@ -117,7 +117,7 @@ func (f *limitedFile) Write(p []byte) (int, error) {
 		}
 		f.written = 0
 	}
-	return 0, nil
+	return n, nil
 }
 
 func (f *limitedFile) Close() error {
