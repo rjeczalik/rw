@@ -97,26 +97,29 @@ func (f *limitedFile) Write(p []byte) (int, error) {
 			return 0, err
 		}
 	}
-	n, err := f.w.Write(p)
-	if err != nil {
-		return n, err
-	}
-	f.written += n
-	// Best-effort attempt of rotating before we approach limit.
-	//
-	// TODO(rjeczalik): If we wanted to be accurate, we could split
-	// the write into two, if the write would exceed the limit.
-	if f.written >= (f.limit - n) {
-		if err = f.w.Close(); err != nil {
+	start, end := 0, min(len(p), f.limit-f.written)
+	for {
+		start, end = end, min(len(p), start+f.limit-f.written)
+		n, err := f.w.Write(p[start:end])
+		if err != nil {
 			return n, err
 		}
-		f.cow = append(f.cow, f.w.Name())
-		if f.w, err = f.mktmp(); err != nil {
-			return n, err
+		f.written += n
+		if f.written >= f.limit {
+			if err = f.w.Close(); err != nil {
+				return n, err
+			}
+			f.cow = append(f.cow, f.w.Name())
+			if f.w, err = f.mktmp(); err != nil {
+				return n, err
+			}
+			f.written = 0
 		}
-		f.written = 0
+		if end == len(p) {
+			break
+		}
 	}
-	return n, nil
+	return len(p), nil
 }
 
 func (f *limitedFile) Close() error {
