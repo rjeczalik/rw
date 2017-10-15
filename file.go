@@ -61,8 +61,9 @@ func (f *limitedFile) Read(p []byte) (int, error) {
 		case os.IsNotExist(err):
 			var e error
 			if f.r, e = os.Open(f.path + ".1"); e != nil {
-				return 0, err
+				return 0, err // return original error
 			}
+			f.n++
 		case err == nil:
 			f.single = true
 		default:
@@ -71,16 +72,14 @@ func (f *limitedFile) Read(p []byte) (int, error) {
 	}
 	n, err := f.r.Read(p)
 	if err == io.EOF {
-		path := fmt.Sprintf("%s.%d", f.path, f.n+1)
-		ff, e := os.Open(path)
-		if e != nil {
+		_ = f.r.Close()
+		var e error
+		if f.r, e = os.Open(fmt.Sprintf("%s.%d", f.path, f.n+1)); e != nil {
 			if os.IsNotExist(e) {
 				return n, err
 			}
 			return n, e
 		}
-		_ = f.r.Close()
-		f.r = ff
 		f.n++
 		err = nil
 	}
