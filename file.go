@@ -36,7 +36,6 @@ type limitedFile struct {
 	err     error
 	tmp     string
 	cow     []string
-	single  bool
 }
 
 var _ io.ReadWriteCloser = (*limitedFile)(nil)
@@ -65,7 +64,6 @@ func (f *limitedFile) Read(p []byte) (int, error) {
 			}
 			f.n++
 		case err == nil:
-			f.single = true
 		default:
 			return 0, err
 		}
@@ -140,9 +138,6 @@ func (f *limitedFile) Close() error {
 		for i, tmp := range f.cow {
 			path := fmt.Sprintf("%s.%d", f.path, i+1)
 			err = nonil(err, os.Rename(tmp, path))
-		}
-		if f.single && err == nil {
-			err = nonil(err, os.Remove(f.path))
 		}
 	}
 	return err
