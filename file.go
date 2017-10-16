@@ -97,7 +97,6 @@ func (f *limitedFile) Write(p []byte) (int, error) {
 	}
 	start, end := 0, min(len(p), f.limit-f.written)
 	for {
-		start, end = end, min(len(p), start+f.limit-f.written)
 		n, err := f.w.Write(p[start:end])
 		if err != nil {
 			return n, err
@@ -116,6 +115,7 @@ func (f *limitedFile) Write(p []byte) (int, error) {
 		if end == len(p) {
 			break
 		}
+		start, end = end, min(len(p), end+f.limit-f.written)
 	}
 	return len(p), nil
 }
